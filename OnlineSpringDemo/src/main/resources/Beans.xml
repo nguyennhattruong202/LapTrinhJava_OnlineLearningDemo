@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+    
+    <bean id="hello" class="com.nnt.onlinespringdemo.HelloWorld" scope="prototype">
+        <property name="name" value="Peter"></property>
+        <property name="lang" ref="en"></property>
+        <property name="names">
+            <list>
+                <value>A</value>
+                <value>B</value>
+                <value>C</value>
+                <value>D</value>
+                <value>E</value>
+                <value>F</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id = "hello2" class="com.nnt.onlinespringdemo.HelloWorld">
+        <constructor-arg value="ABC"></constructor-arg>
+        <constructor-arg ref="en"></constructor-arg>
+    </bean>
+    
+    <bean id ="en" class="com.nnt.onlinespringdemo.Language">
+        <property name="lang" value="English"></property>
+    </bean>
+    
+    <!-- Begin demo connect to MySQL with Beans.xml -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/saledb" />
+        <property name="username" value="root" />
+        <property name="password" value="123456@" />
+    </bean>
+    <!-- End demo connect to MySQL with Beans.xml -->
+    
+    <!--Begin demo with CollectionDemo Class use Beans.xml-->
+    <bean id="collectionDemo" class="com.nnt.onlinespringdemo.CollectionDemo">
+        <property name="listDemo">
+            <list>
+                <value>Apple</value>
+                <value>Banana</value>
+            </list>
+        </property>
+        <property name="setDemo">
+            <set>
+                <value>Onion</value>
+                <value>Cherry</value>
+            </set>
+        </property>
+        <property name="mapDemo">
+            <map>
+                <entry key="orange" value="Orange"></entry>
+                <entry key="lemon" value="Lemon"></entry>
+            </map>
+        </property>
+        <property name="propertiesDemo">
+            <props>
+                <prop key="blackberry">Blackberry</prop>
+                <prop key="mango">Mango</prop>
+            </props>
+        </property>
+    </bean>
+    <!--End demo with CollectionDemo Class use Beans.xml-->
+    
+    <!--Begin demo with no new JdbcTemplate in main-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="dataSource"></constructor-arg>
+    </bean>
+    <!--End demo with no new JdbcTemplate in main-->
+</beans>

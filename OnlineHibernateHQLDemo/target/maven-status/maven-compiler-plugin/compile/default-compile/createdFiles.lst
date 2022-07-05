@@ -1,0 +1,5 @@
+com\nnt\pojo\Manufacturer.class
+com\nnt\onlinehibernatehqldemo\OnlineHibernateHQLDemo.class
+com\nnt\pojo\Category.class
+com\nnt\configutils\HibernateUtils.class
+com\nnt\pojo\Product.class
