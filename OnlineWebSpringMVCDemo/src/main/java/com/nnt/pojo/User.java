@@ -5,8 +5,17 @@
 package com.nnt.pojo;
 
 public class User {
+
     private String lastName;
     private String firstName;
+
+    public User() {
+    }
+
+    public User(String lastName, String firstName) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+    }
 
     /**
      * @return the lastName
@@ -35,5 +44,5 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
 }

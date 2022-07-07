@@ -5,6 +5,8 @@
 package com.nnt.controllers;
 
 import com.nnt.pojo.User;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,13 +55,23 @@ public class HomeController {
             model.addAttribute("name", String.format("%s %s", lastName, firstName));
         }
         model.addAttribute("user", new User());
+        List<User> users = new ArrayList<>();
+        users.add(new User("Nguyen", "A"));
+        users.add(new User("Le", "B"));
+        users.add(new User("Huynh", "C"));
+        users.add(new User("Ngo", "D"));
+        users.add(new User("Doan", "E"));
+        users.add(new User("Vo", "F"));
+        model.addAttribute("users", users);
         return "index";
     }
     //End demo @RequestParam with use Map<String, String>
 
+    //Begin demo with form
     @RequestMapping(path = "/hello-post", method = RequestMethod.POST)
     public String show(Model model, @ModelAttribute(value = "user") User user) {
         model.addAttribute("fullName", user.getLastName() + " " + user.getFirstName());
         return "index";
     }
+    //End demo with form
 }
