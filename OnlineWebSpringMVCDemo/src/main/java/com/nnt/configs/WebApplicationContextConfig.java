@@ -22,12 +22,13 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
+
     @Bean
     public InternalResourceViewResolver getInternalResourceViewResolver() {
-        InternalResourceViewResolver resource = new InternalResourceViewResolver();
-        resource.setViewClass(JstlView.class);
-        resource.setPrefix("/WEB-INF/jsp/");
-        resource.setSuffix(".jsp");
-        return resource;
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setViewClass(JstlView.class);
+        resolver.setPrefix("/WEB-INF/jsp/");
+        resolver.setSuffix(".jsp");
+        return resolver;
     }
 }
