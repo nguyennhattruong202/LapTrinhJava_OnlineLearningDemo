@@ -5,9 +5,10 @@
 package com.nnt.pojos;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,201 +16,210 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "product")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
+    @NamedQuery(name = "Product.findById", query = "SELECT p FROM Product p WHERE p.id = :id"),
+    @NamedQuery(name = "Product.findByName", query = "SELECT p FROM Product p WHERE p.name = :name"),
+    @NamedQuery(name = "Product.findByDescription", query = "SELECT p FROM Product p WHERE p.description = :description"),
+    @NamedQuery(name = "Product.findByPrice", query = "SELECT p FROM Product p WHERE p.price = :price"),
+    @NamedQuery(name = "Product.findByManufacturer", query = "SELECT p FROM Product p WHERE p.manufacturer = :manufacturer"),
+    @NamedQuery(name = "Product.findByImage", query = "SELECT p FROM Product p WHERE p.image = :image"),
+    @NamedQuery(name = "Product.findByCreatedDate", query = "SELECT p FROM Product p WHERE p.createdDate = :createdDate"),
+    @NamedQuery(name = "Product.findByActive", query = "SELECT p FROM Product p WHERE p.active = :active")})
 public class Product implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id")
-    private int id;
-    @Column(name = "name", length = 50)
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "name")
     private String name;
-    @Column(name = "description", length = 255)
+    @Size(max = 255)
+    @Column(name = "description")
     private String description;
     @Column(name = "price")
-    private BigDecimal price;
-    @Column(name = "manufacturer", length = 50)
+    private Long price;
+    @Size(max = 50)
+    @Column(name = "manufacturer")
     private String manufacturer;
-    @Column(name = "image", length = 100)
+    @Size(max = 100)
+    @Column(name = "image")
     private String image;
     @Column(name = "created_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     @Column(name = "active")
-    private boolean active;
+    private Boolean active;
     @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Category categoryId;
     @OneToMany(mappedBy = "productId")
     private Set<ProMan> proManSet;
-    @OneToMany(mappedBy = "productId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
     private Set<OrderDetail> orderDetailSet;
+    @Transient
+    private MultipartFile file;
 
     public Product() {
     }
 
-    public Product(int id, String name, String description, BigDecimal price, String manufacturer, String image, Date createdDate, boolean active, Category categoryId) {
+    public Product(Integer id) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.manufacturer = manufacturer;
-        this.image = image;
-        this.createdDate = createdDate;
-        this.active = active;
-        this.categoryId = categoryId;
     }
 
-    /**
-     * @return the id
-     */
-    public int getId() {
+    public Product(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    /**
-     * @return the name
-     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the description
-     */
     public String getDescription() {
         return description;
     }
 
-    /**
-     * @param description the description to set
-     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /**
-     * @return the price
-     */
-    public BigDecimal getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    /**
-     * @param price the price to set
-     */
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 
-    /**
-     * @return the manufacturer
-     */
     public String getManufacturer() {
         return manufacturer;
     }
 
-    /**
-     * @param manufacturer the manufacturer to set
-     */
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
 
-    /**
-     * @return the image
-     */
     public String getImage() {
         return image;
     }
 
-    /**
-     * @param image the image to set
-     */
     public void setImage(String image) {
         this.image = image;
     }
 
-    /**
-     * @return the createdDate
-     */
     public Date getCreatedDate() {
         return createdDate;
     }
 
-    /**
-     * @param createdDate the createdDate to set
-     */
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    /**
-     * @return the active
-     */
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    /**
-     * @param active the active to set
-     */
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    /**
-     * @return the categoryId
-     */
     public Category getCategoryId() {
         return categoryId;
     }
 
-    /**
-     * @param categoryId the categoryId to set
-     */
     public void setCategoryId(Category categoryId) {
         this.categoryId = categoryId;
     }
 
-    /**
-     * @return the proManSet
-     */
+    @XmlTransient
     public Set<ProMan> getProManSet() {
         return proManSet;
     }
 
-    /**
-     * @param proManSet the proManSet to set
-     */
     public void setProManSet(Set<ProMan> proManSet) {
         this.proManSet = proManSet;
     }
 
-    /**
-     * @return the orderDetailSet
-     */
+    @XmlTransient
     public Set<OrderDetail> getOrderDetailSet() {
         return orderDetailSet;
     }
 
-    /**
-     * @param orderDetailSet the orderDetailSet to set
-     */
     public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
         this.orderDetailSet = orderDetailSet;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Product)) {
+            return false;
+        }
+        Product other = (Product) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.nnt.pojos.Product[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the file
+     */
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
 }

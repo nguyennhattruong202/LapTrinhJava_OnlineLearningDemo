@@ -6,45 +6,93 @@ package com.nnt.pojos;
 
 import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "user")
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
+    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
+    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findByPhone", query = "SELECT u FROM User u WHERE u.phone = :phone"),
+    @NamedQuery(name = "User.findByUsername", query = "SELECT u FROM User u WHERE u.username = :username"),
+    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
+    @NamedQuery(name = "User.findByActive", query = "SELECT u FROM User u WHERE u.active = :active"),
+    @NamedQuery(name = "User.findByUserRole", query = "SELECT u FROM User u WHERE u.userRole = :userRole")})
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id")
-    private int id;
-    @Column(name = "first_name", length = 45)
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "last_name", length = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "last_name")
     private String lastName;
-    @Column(name = "email", length = 45)
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "email")
     private String email;
-    @Column(name = "phone", length = 45)
+    // @Pattern(regexp="^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message="Invalid phone/fax format, should be as xxx-xxx-xxxx")//if the field contains phone or fax number consider using this annotation to enforce field validation
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "phone")
     private String phone;
-    @Column(name = "username", length = 45)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "username")
     private String username;
-    @Column(name = "password", length = 100)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
+    @Column(name = "password")
     private String password;
     @Column(name = "active")
-    private boolean active;
-    @Column(name = "user_role", length = 10)
+    private Boolean active;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 10)
+    @Column(name = "user_role")
     private String userRole;
     @OneToMany(mappedBy = "userId")
-    private Set<SaleOrder> saleOrderSer;
+    private Set<SaleOrder> saleOrderSet;
 
     public User() {
     }
 
-    public User(int id, String firstName, String lastName, String email, String phone, String username, String password, boolean active, String userRole) {
+    public User(Integer id) {
+        this.id = id;
+    }
+
+    public User(Integer id, String firstName, String lastName, String email, String phone, String username, String password, String userRole) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,140 +100,113 @@ public class User implements Serializable {
         this.phone = phone;
         this.username = username;
         this.password = password;
-        this.active = active;
         this.userRole = userRole;
     }
 
-    /**
-     * @return the id
-     */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    /**
-     * @return the firstName
-     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getFirstName() {
         return firstName;
     }
 
-    /**
-     * @param firstName the firstName to set
-     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    /**
-     * @return the lastName
-     */
     public String getLastName() {
         return lastName;
     }
 
-    /**
-     * @param lastName the lastName to set
-     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    /**
-     * @return the email
-     */
     public String getEmail() {
         return email;
     }
 
-    /**
-     * @param email the email to set
-     */
     public void setEmail(String email) {
         this.email = email;
     }
 
-    /**
-     * @return the phone
-     */
     public String getPhone() {
         return phone;
     }
 
-    /**
-     * @param phone the phone to set
-     */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    /**
-     * @return the username
-     */
     public String getUsername() {
         return username;
     }
 
-    /**
-     * @param username the username to set
-     */
     public void setUsername(String username) {
         this.username = username;
     }
 
-    /**
-     * @return the password
-     */
     public String getPassword() {
         return password;
     }
 
-    /**
-     * @param password the password to set
-     */
     public void setPassword(String password) {
         this.password = password;
     }
 
-    /**
-     * @return the active
-     */
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    /**
-     * @param active the active to set
-     */
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    /**
-     * @return the userRole
-     */
     public String getUserRole() {
         return userRole;
     }
 
-    /**
-     * @param userRole the userRole to set
-     */
     public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
 
-    /**
-     * @return the saleOrderSer
-     */
-    public Set<SaleOrder> getSaleOrderSer() {
-        return saleOrderSer;
+    @XmlTransient
+    public Set<SaleOrder> getSaleOrderSet() {
+        return saleOrderSet;
     }
 
-    /**
-     * @param saleOrderSer the saleOrderSer to set
-     */
-    public void setSaleOrderSer(Set<SaleOrder> saleOrderSer) {
-        this.saleOrderSer = saleOrderSer;
+    public void setSaleOrderSet(Set<SaleOrder> saleOrderSet) {
+        this.saleOrderSet = saleOrderSet;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof User)) {
+            return false;
+        }
+        User other = (User) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.nnt.pojos.User[ id=" + id + " ]";
+    }
+
 }
