@@ -5,6 +5,7 @@
 package com.nnt.pojos;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -23,6 +24,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -52,14 +55,16 @@ public class Product implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 5, max = 50, message = "{product.name.sizeError}")
     @Column(name = "name")
     private String name;
     @Size(max = 255)
     @Column(name = "description")
     private String description;
+    @Min(value = 10000, message = "{product.price.priceMinError}")
+    @Max(value = 1000000000, message = "{product.price.priceMaxError}")
     @Column(name = "price")
-    private Long price;
+    private BigDecimal price;
     @Size(max = 50)
     @Column(name = "manufacturer")
     private String manufacturer;
@@ -117,11 +122,11 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

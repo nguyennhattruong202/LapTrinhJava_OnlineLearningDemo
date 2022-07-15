@@ -5,6 +5,7 @@
 package com.nnt.pojos;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -43,7 +44,7 @@ public class SaleOrder implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "amount")
-    private Long amount;
+    private BigDecimal amount;
     @Basic(optional = false)
     @NotNull
     @Column(name = "created_date")
@@ -75,11 +76,11 @@ public class SaleOrder implements Serializable {
         this.id = id;
     }
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

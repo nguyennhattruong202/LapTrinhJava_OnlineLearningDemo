@@ -11,6 +11,20 @@
 <c:url value="/admin/products" var="action"/>
 <form:form method="post" action="${action}" modelAttribute="product" enctype="multipart/form-data">
     <div class="form-group">
+        <label for="name">Name</label>
+        <form:input type="text" id="name" path="name" cssClass="form-control"/>
+        <form:errors path="name" cssClass="text-danger" element="div"/>
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <form:textarea id="description" path="description" cssClass="form-control"/>
+    </div>
+    <div class="form-group">
+        <label for="price">Price</label>
+        <form:input type="text" id="price" path="price" cssClass="form-control"/>
+        <form:errors path="price" cssClass="text-danger" element="div"/>
+    </div>
+    <div class="form-group">
         <label for="file">Product image</label>
         <form:input type="file" id="file" path="file" cssClass="form-control"/>
     </div>
