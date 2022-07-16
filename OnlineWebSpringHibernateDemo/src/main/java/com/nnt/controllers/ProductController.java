@@ -4,12 +4,9 @@
  */
 package com.nnt.controllers;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.nnt.pojos.Product;
+import com.nnt.services.ProductService;
 import com.nnt.validator.WebAppValidator;
-import java.io.IOException;
-import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,9 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ProductController {
 
     @Autowired
-    private Cloudinary cloudinary;
-    @Autowired
     private WebAppValidator productValidator;
+    @Autowired
+    private ProductService productService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -41,16 +38,13 @@ public class ProductController {
     }
 
     @PostMapping("/admin/products")
-    public String add(@ModelAttribute(value = "product") @Valid Product product,
+    public String add(Model model, @ModelAttribute(value = "product") @Valid Product product,
             BindingResult result) {
         if (!result.hasErrors()) {
-            try {
-                Map r = this.cloudinary.uploader().upload(product.getFile().getBytes(),
-                        ObjectUtils.asMap("resource_type", "auto"));
-                String img = (String) r.get("secure_url");
+            if (this.productService.addOrUpdate(product) == true) {
                 return "redirect:/";
-            } catch (IOException ex) {
-                System.err.println("==ADD PRODUCT==" + ex.getMessage());
+            } else {
+                model.addAttribute("errorMessage", "Something wrong!");
             }
         }
         return "product";

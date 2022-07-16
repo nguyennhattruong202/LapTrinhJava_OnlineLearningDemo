@@ -26,13 +26,13 @@ public class ProductRepositoryImpl implements ProductRepository {
     private LocalSessionFactoryBean sessionFactory;
 
     @Override
-    public List<Product> getProducts(String kw) {
+    public List<Product> getProducts(String kw, int page) {
         Session session = this.sessionFactory.getObject().getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Product> query = criteriaBuilder.createQuery(Product.class);
         Root root = query.from(Product.class);
         query = query.select(root);
-        if (!kw.isEmpty() && kw != null) {
+        if (kw != null) {
             Predicate predicate = (Predicate) criteriaBuilder
                     .like(root.get("name").as(String.class),
                             String.format("%%%s%%", kw));
@@ -40,7 +40,29 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
 
         Query q = session.createQuery(query);
+        int max = 6;
+        q.setMaxResults(max);
+        q.setFirstResult((page - 1) * max);
         return q.getResultList();
+    }
+
+    @Override
+    public boolean addOrUpdate(Product product) {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        try {
+            session.save(product);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public long countProduct() {
+        Session session = this.sessionFactory.getObject().getCurrentSession();
+        Query q = session.createQuery("Select Count(*) From Product");
+        return Long.parseLong(q.getSingleResult().toString());
     }
 
 }

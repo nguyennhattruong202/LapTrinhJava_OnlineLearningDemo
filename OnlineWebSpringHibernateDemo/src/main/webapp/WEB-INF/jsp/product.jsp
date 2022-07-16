@@ -9,6 +9,9 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <h1 class="text-center text-danger">Products Management</h1>
 <c:url value="/admin/products" var="action"/>
+<c:if test="${errorMessage != null}">
+    <div class="alert alert-danger">${errorMessage}</div>
+</c:if>
 <form:form method="post" action="${action}" modelAttribute="product" enctype="multipart/form-data">
     <div class="form-group">
         <label for="name">Name</label>
@@ -23,6 +26,15 @@
         <label for="price">Price</label>
         <form:input type="text" id="price" path="price" cssClass="form-control"/>
         <form:errors path="price" cssClass="text-danger" element="div"/>
+    </div>
+    <div class="form-group">
+        <label for="cate">Category</label>
+        <form:select id="cate" path="categoryId" cssClass="form-control">
+            <c:forEach items="${categories}" var="cate">
+                <option value="${cate.id}">${cate.name}</option>
+            </c:forEach>
+        </form:select>
+        <form:errors path="categoryId" cssClass="text-danger" element="div"/>
     </div>
     <div class="form-group">
         <label for="file">Product image</label>

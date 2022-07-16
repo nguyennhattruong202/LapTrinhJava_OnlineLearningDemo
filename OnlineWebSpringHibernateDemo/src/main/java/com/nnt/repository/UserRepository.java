@@ -2,16 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package com.nnt.services;
+package com.nnt.repository;
 
-import com.nnt.pojos.Product;
+import com.nnt.pojos.User;
 import java.util.List;
 
-public interface ProductService {
+public interface UserRepository {
 
-    List<Product> getProducts(String kw, int page);
+    boolean addUser(User user);
 
-    boolean addOrUpdate(Product product);
-
-    long countProduct();
+    List<User> getUsers(String username);
 }

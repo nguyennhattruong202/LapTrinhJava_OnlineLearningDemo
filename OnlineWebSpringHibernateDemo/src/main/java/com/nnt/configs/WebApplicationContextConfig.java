@@ -6,6 +6,7 @@ package com.nnt.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.nnt.formatter.CategoryFormatter;
 import com.nnt.validator.ProductNameValidator;
 import com.nnt.validator.WebAppValidator;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -36,18 +38,18 @@ import org.springframework.web.servlet.view.JstlView;
     "com.nnt.validator"
 })
 public class WebApplicationContextConfig implements WebMvcConfigurer {
-
+    
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
-
+    
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
         registry.addResourceHandler("images/**").addResourceLocations("/resources/images/");
     }
-
+    
     @Bean
     public InternalResourceViewResolver internalResourceViewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -56,14 +58,14 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         resolver.setSuffix(".jsp");
         return resolver;
     }
-
+    
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setDefaultEncoding("UTF-8");
         return resolver;
     }
-
+    
     @Bean
     public Cloudinary cloudinary() {
         Cloudinary c = new Cloudinary(ObjectUtils.asMap(
@@ -83,14 +85,19 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
     public Validator getValidator() {
         return validator();
     }
-
+    
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new CategoryFormatter());
+    }
+    
     @Bean
     public LocalValidatorFactoryBean validator() {
         LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
         localValidatorFactoryBean.setValidationMessageSource(messageSource());
         return localValidatorFactoryBean;
     }
-
+    
     @Bean
     public WebAppValidator productValidator() {
         Set<Validator> springValidators = new HashSet<>();
@@ -99,7 +106,7 @@ public class WebApplicationContextConfig implements WebMvcConfigurer {
         webAppValidator.setSpringValidators(springValidators);
         return webAppValidator;
     }
-
+    
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();

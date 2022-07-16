@@ -4,14 +4,13 @@
  */
 package com.nnt.services;
 
-import com.nnt.pojos.Product;
+import com.nnt.pojos.User;
 import java.util.List;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface ProductService {
+public interface UserService extends UserDetailsService {
 
-    List<Product> getProducts(String kw, int page);
+    boolean addUser(User user);
 
-    boolean addOrUpdate(Product product);
-
-    long countProduct();
+    List<User> getUsers(String username);
 }

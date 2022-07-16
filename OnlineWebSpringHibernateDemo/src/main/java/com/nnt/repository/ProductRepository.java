@@ -9,5 +9,9 @@ import java.util.List;
 
 public interface ProductRepository {
 
-    List<Product> getProducts(String kw);
+    List<Product> getProducts(String kw, int page);
+
+    boolean addOrUpdate(Product product);
+    
+    long countProduct();
 }

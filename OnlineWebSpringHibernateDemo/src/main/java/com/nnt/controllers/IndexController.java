@@ -6,8 +6,10 @@ package com.nnt.controllers;
 
 import com.nnt.services.CategoryService;
 import com.nnt.services.ProductService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,9 +26,12 @@ public class IndexController {
     private ProductService productService;
 
     @RequestMapping("/")
-    public String index(Model model, @RequestParam(value = "kw", required = false, defaultValue = "") String kw) {
+    @Transactional
+    public String index(Model model, @RequestParam(required = false) Map<String, String> params) {
+        int page = Integer.parseInt(params.getOrDefault("page", "1"));
         model.addAttribute("categories", this.categoryService.getCategories());
-        model.addAttribute("products", this.productService.getProducts(kw));
+        model.addAttribute("products", this.productService.getProducts(params.get("kw"), page));
+        model.addAttribute("counter", this.productService.countProduct());
         return "index";
     }
 
